@@ -7,6 +7,7 @@ the local cache (NFR-003); run `uv sync` in a rendered service once online to wa
 
 import os
 import subprocess
+import tomllib
 from pathlib import Path
 
 import pytest
@@ -14,6 +15,8 @@ import yaml
 from copier import run_copy
 
 ROOT = Path(__file__).resolve().parent.parent
+# Colons and quotes must survive YAML (contract) and TOML (pyproject) rendering.
+DESCRIPTION = 'Demo: a "quoted" service.'
 
 
 @pytest.fixture(scope="module")
@@ -22,7 +25,7 @@ def service(tmp_path_factory) -> Path:
     run_copy(
         str(ROOT),
         dst,
-        data={"project_name": "demo-service", "description": "A demo service."},
+        data={"project_name": "demo-service", "description": DESCRIPTION},
         defaults=True,
         unsafe=True,
         vcs_ref="HEAD",
@@ -75,7 +78,9 @@ def test_rendered_layout_and_names(service):
     assert 'CMD ["demo-service"]' in (service / "Dockerfile").read_text()
     contract = yaml.safe_load((service / "contracts" / "openapi.yaml").read_text())
     assert contract["info"] == {"title": "demo-service", "version": "0.1.0",
-                                "description": "A demo service."}  # fmt: skip
+                                "description": DESCRIPTION}  # fmt: skip
+    pyproject = tomllib.loads((service / "pyproject.toml").read_text())
+    assert pyproject["project"]["description"] == DESCRIPTION
 
 
 @pytest.mark.spec("FR-004")
