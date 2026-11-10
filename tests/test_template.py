@@ -16,7 +16,10 @@ from copier import run_copy
 
 ROOT = Path(__file__).resolve().parent.parent
 # Colons and quotes must survive YAML (contract) and TOML (pyproject) rendering.
-DESCRIPTION = 'Demo: a "quoted" service.'
+DESCRIPTION = (
+    'Demo: a "quoted" service whose description is long enough to need wrapping when it is '
+    "rendered into the package docstring, which ruff limits to 100 characters per line."
+)
 
 
 @pytest.fixture(scope="module")
