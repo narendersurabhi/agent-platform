@@ -1,0 +1,51 @@
+# Provided contract (ADR 0003). Bump info.version on every change; a breaking change bumps
+# MAJOR and keeps the old major served. scripts/contract_check.py enforces this.
+openapi: 3.1.0
+info:
+  title: {{ project_name }}
+  version: 0.1.0
+  description: {{ description | tojson }}
+paths:
+  /healthz:
+    get:
+      operationId: getHealth
+      summary: Liveness check (no authentication, not traced).
+      responses:
+        "200":
+          description: The service is up.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Health"
+components:
+  schemas:
+    Health:
+      type: object
+      required: [status, version, uptime_s]
+      properties:
+        status:
+          type: string
+          enum: [ok]
+        version:
+          type: string
+        uptime_s:
+          type: number
+          minimum: 0
+    Error:
+      description: The error envelope from docs/conventions.md (agent-platform).
+      type: object
+      required: [error, trace_id]
+      properties:
+        error:
+          type: object
+          required: [type, message]
+          properties:
+            type:
+              type: string
+              enum: [invalid_request, unauthenticated, forbidden, not_found, conflict,
+                     rate_limited, upstream_error, unavailable, timeout, internal]
+            message:
+              type: string
+        trace_id:
+          type: string
+          pattern: "^[0-9a-f]{32}$"

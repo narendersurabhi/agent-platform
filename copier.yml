@@ -1,0 +1,35 @@
+# Service template (ADR 0002 layout, conventions 1.0.0). Create a service with:
+#   uvx copier copy --trust gh:narendersurabhi/agent-platform <new-repo-dir>
+# Pull later template changes into a service (opt-in, per repo):
+#   uvx copier update --trust
+_subdirectory: template
+_templates_suffix: .jinja
+_answers_file: .copier-answers.yml
+_min_copier_version: "9.4"
+
+project_name:
+  type: str
+  help: Repo name in kebab-case, e.g. llm-gateway
+  validator: >-
+    {% if not project_name or project_name != project_name.lower() or "_" in project_name or " " in project_name %}
+    use kebab-case: lowercase letters, digits and hyphens
+    {% endif %}
+
+package_name:
+  type: str
+  help: Python package name
+  default: "{{ project_name | replace('-', '_') }}"
+
+description:
+  type: str
+  help: One sentence for pyproject.toml and the README
+
+env_prefix:
+  type: str
+  help: Prefix for the service's own environment variables
+  default: "{{ package_name | upper }}_"
+
+port:
+  type: int
+  help: Port the service listens on
+  default: 8000
