@@ -1,0 +1,1 @@
+../../scripts/contract_check.py
