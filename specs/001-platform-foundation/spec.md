@@ -5,7 +5,7 @@
 | **Status** | Implemented |
 | **Created** | 2026-11-10 |
 | **Plan** | [plan.md](plan.md) · **Tasks** [tasks.md](tasks.md) |
-| **PR** | _to be filled in when opened_ |
+| **PR** | [#1](https://github.com/narendersurabhi/agent-platform/pull/1) (open) |
 
 ## Summary
 What lets the agent services live in separate repos and still fit together: written
