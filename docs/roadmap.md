@@ -4,9 +4,10 @@ What each repo takes next. Each line becomes a spec in that repo. Order matters 
 
 | Repo | Next | Summary |
 |---|---|---|
-| agent-platform | 002-shared-infra | VPC, ECS cluster, ALB, OTel collector tier with tail sampling (all errors and slow traces, a few % of the rest); outputs published to SSM `/agents/<env>/…` |
+| agent-platform | 002-shared-infra | VPC, ECS cluster, **EKS cluster with Graviton managed node groups for the gateway** (ADR 0006), Redis for gateway limits, internal load balancer between ECS and EKS, OTel collector tier with tail sampling (all errors and slow traces, a few % of the rest); outputs published to SSM `/agents/<env>/…` |
 | llm-gateway | 001-service-skeleton | Template skeleton plus contract v0.1.0 (ADR 0004 endpoints and headers) |
-| llm-gateway | 002-dialect-passthrough | Native `/anthropic/v1/messages` and `/openai/v1/chat/completions` forwarding, byte-faithful for `cache_control`, system blocks, tool order and history; `/v1/models` discovery; placement table with thread affinity; token-bucket limiter counting only uncached input and cache writes (estimate, then correct from `usage`); concurrency limiter for self-hosted replicas; `usage` passed through; cache hit-rate and per-provider metrics; provider credentials held here only |
+| llm-gateway | 002-envoy-gateway | Envoy AI Gateway (ADR 0006): pinned Helm installs, Gateway/route/backend/policy config with kind and EKS overlays, offline validation of manifests and CEL costs in the hooks, the spike's acceptance suite promoted to `tests/acceptance/` and required before any upgrade, contract v1.0.0 (Envoy paths, `/v1/models` IDs only) |
+| llm-gateway | 003-usage-ledger | Cumulative per-tenant spend and budgets from Envoy's per-request access logs (Python, ports and adapters) |
 | retrieval-service | 001-service-skeleton | Template skeleton plus contracts: MCP `search` v0.1.0 and ingest API v0.1.0 (ADR 0005) |
 | retrieval-service | 002-search-and-ingest | Embedder, vector index and reranker ports with adapters; access filtering from `x-agent-identity`; token-budgeted results; atomic per-document-version ingest; recall@k evaluation set |
 | docling-pipeline | 005-retrieval-ingest | `ChunkSink` port; an adapter that sends chunks to retrieval's ingest API (pinned contract), idempotent per document version |
