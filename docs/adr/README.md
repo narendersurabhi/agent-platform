@@ -7,6 +7,7 @@
 | [0003](0003-contracts-in-provider-repos.md) | Contracts live in the provider's repo; consumers pin copies |
 | [0004](0004-llm-gateway-dialects-and-model-ownership.md) | Gateway passes dialects through; agents own model choice |
 | [0005](0005-retrieval-as-a-service.md) | Retrieval is a service, not an in-process tool |
+| [0006](0006-envoy-ai-gateway.md) | Build the LLM gateway on Envoy AI Gateway, on Kubernetes (EKS) |
 
 New ADRs take the next number. An ADR is never edited to reverse it: write a new one that
 supersedes it and set the old one's status to `Superseded by NNNN`.

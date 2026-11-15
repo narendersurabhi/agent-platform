@@ -1,6 +1,6 @@
 # ADR 0004: LLM gateway passes provider dialects through; agents own model choice
 
-- **Status:** Accepted, 2026-11-10
+- **Status:** Accepted, 2026-11-10; decision 1's OpenAI path and `/v1/models` capabilities superseded by ADR 0006
 - **Context:** Agents call Claude (Claude API, Claude Platform on AWS, Bedrock) and, later,
   self-hosted open models (Gemma, Qwen) served by vLLM or SGLang with an OpenAI-compatible
   API. A gateway centralizes credentials, placement, capacity limits and cost accounting.

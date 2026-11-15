@@ -5,14 +5,14 @@ cadence) belongs to one repo. A service may do more than this document asks, nev
 Changing a convention is an ADR plus a version bump of this file, and every service adopts
 it on its own schedule.
 
-**Version:** 1.0.0
+**Version:** 1.1.0 (1.1.0: gateway endpoints per ADR 0006)
 
 ## Services and ownership
 
 | Service | Repo | Owns | Provides |
 |---|---|---|---|
 | Orchestrator | `deepagents-deploy` | runs, threads, checkpoints, the run queue | `POST /v1/runs`, run events |
-| LLM gateway | `llm-gateway` | provider credentials, placement, capacity limits, usage ledger | `/anthropic/v1/messages`, `/openai/v1/chat/completions`, `/v1/models` |
+| LLM gateway | `llm-gateway` (Envoy AI Gateway on EKS, ADR 0006) | provider credentials, placement, capacity limits, usage ledger | `/anthropic/v1/messages`, `/v1/chat/completions`, `/v1/models` (model IDs) |
 | Retrieval | `retrieval-service` | the index, embedding-model version, access filtering | MCP `search`, ingest API |
 | Ingestion | `docling-pipeline` | parsing and chunking | nothing: a consumer of the ingest API |
 
