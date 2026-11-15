@@ -4,7 +4,7 @@ What each repo takes next. Each line becomes a spec in that repo. Order matters 
 
 | Repo | Next | Summary |
 |---|---|---|
-| agent-platform | 002-shared-infra | VPC, ECS cluster, **EKS cluster with Graviton managed node groups for the gateway** (ADR 0006), Redis for gateway limits, internal load balancer between ECS and EKS, OTel collector tier with tail sampling (all errors and slow traces, a few % of the rest); outputs published to SSM `/agents/<env>/…` |
+| agent-platform | 002-shared-infra | VPC, ECS cluster, **EKS cluster for the gateway on Graviton EC2 nodes: evaluate EKS Auto Mode first, managed node groups as the fallback** (ADR 0006), Redis for gateway limits, internal load balancer between ECS and EKS, OTel collector tier with tail sampling (all errors and slow traces, a few % of the rest); outputs published to SSM `/agents/<env>/…` |
 | llm-gateway | 001-service-skeleton | Template skeleton plus contract v0.1.0 (ADR 0004 endpoints and headers) |
 | llm-gateway | 002-envoy-gateway | Envoy AI Gateway (ADR 0006): pinned Helm installs, Gateway/route/backend/policy config with kind and EKS overlays, offline validation of manifests and CEL costs in the hooks, the spike's acceptance suite promoted to `tests/acceptance/` and required before any upgrade, contract v1.0.0 (Envoy paths, `/v1/models` IDs only) |
 | llm-gateway | 003-usage-ledger | Cumulative per-tenant spend and budgets from Envoy's per-request access logs (Python, ports and adapters) |

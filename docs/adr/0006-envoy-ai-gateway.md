@@ -27,11 +27,25 @@
      projects' Helm charts at pinned versions. The repo holds configuration (Gateway, routes,
      backends, security and traffic policies), deployment overlays, and the acceptance suite;
      it does not implement forwarding, limits or auth itself.
-  2. **Target: Amazon EKS with EC2 (Graviton) managed node groups**, one cluster for the gateway
-     and, later, self-hosted model serving (llm-d needs Kubernetes too). Other services may
-     stay on ECS and reach the gateway through an internal load balancer in the same VPC.
-     Standalone `aigw run` on bare EC2 or ECS is not used until the reported gaps are fixed
-     and the acceptance suite passes against it.
+  2. **Target: Amazon EKS on EC2 (Graviton) nodes**, one cluster for the gateway and, later,
+     self-hosted model serving (llm-d needs Kubernetes too). How the nodes are managed is
+     evaluated in agent-platform spec 002: **EKS Auto Mode first** (AWS provisions, patches
+     and scales the EC2 nodes; a management fee of roughly 12% of the On-Demand price), with
+     EKS managed node groups as the fallback. Other services may stay on ECS and reach the
+     gateway through an internal load balancer in the same VPC.
+  2a. **Considered and rejected for now:**
+     - *EKS on Fargate:* no Arm (Graviton), no GPUs, no DaemonSets, no Fargate Spot on EKS;
+       GPU serving would need EC2 nodes anyway, so the cluster would mix two compute models.
+     - *Envoy AI Gateway directly on EC2 or ECS (`aigw run`, no Kubernetes):* this is the
+       standalone mode the spike tested (8/12): no client API-key auth, no header consistent
+       hashing, no global rate limiting, and one backend's credential sent to another.
+       Revisit when those upstream issues are fixed; `spikes/run_spike.sh envoy` re-tests it.
+     - *Hand-built Envoy plus the AI Gateway external processor on ECS, without Envoy
+       Gateway:* possible in principle, but we would generate and maintain Envoy's raw
+       configuration ourselves and lose the policy APIs (security, traffic, rate limits) that
+       the acceptance suite relies on. That is custom integration code the evaluation was
+       meant to avoid.
+     - *LiteLLM on ECS:* runs without Kubernetes, but scored 9/14 (see Context).
   3. **The acceptance suite is the contract with the framework.** Any gateway, Envoy Gateway or
      AI Gateway upgrade must pass it on a pinned kind cluster before rollout, because the
      guarantees we rely on (byte-exact bodies, `usage` untouched, per-backend credentials,
